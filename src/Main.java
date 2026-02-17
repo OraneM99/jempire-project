@@ -3,7 +3,17 @@ import java.util.Scanner;
 public class Main {
     private static final Scanner sc = new Scanner(System.in);
     private static boolean accesMine = false;
-    private static boolean victory = false;
+    private static boolean victoire = false;
+    private static boolean defaite = false;
+
+    private static void nourirHabitants(Ressources ressourcesJoueur) {
+        int nourriture = ressourcesJoueur.getNourriture();
+        int habitants = ressourcesJoueur.getHabitants();
+        int nourir = ressourcesJoueur.setNourriture(nourriture - habitants);
+        nourriture = nourir;
+        System.out.println("Vous avez nourir vos habitants.");
+    }
+
 
     private static void explorerForet(Ressources ressourcesJoueur) {
         int bois =  ressourcesJoueur.getBois();
@@ -82,7 +92,7 @@ public class Main {
             ressourcesJoueur.setPierre(pierre - 100);
             ressourcesJoueur.setOr(or - 200);
             System.out.println("Félicitation, Rome ne s'est pas bâti en un jour, ni en un tour ; Vous avez débuté un grand Empire \n(qui a un château T3 exposition plein sud, pas cher en plus c'est une bonne affaire)");
-            victory = true;
+            victoire = true;
             //ressourcesJoueur.setHabitants(habitants - 100); On les sacrifie du coup ?
         }
     }
@@ -99,6 +109,8 @@ public class Main {
     public static void main(String[] args) {
         Ressources joueur1 = new Ressources();
         int habitants = joueur1.getHabitants();
+        int nourriture = joueur1.getNourriture();
+
         do {
             showRessources(joueur1);
             System.out.println("Que voulez-vous faire ?");
@@ -119,10 +131,13 @@ public class Main {
                 default -> System.out.println("Impossible d'effectuer cette action");
             }
 
-        } while(!victory && habitants <= 0);
-        if (habitants <= 0) {
-            System.out.println("Votre royaume a péri d'une grande famine. Tips : essayez de manger vos camarades pour temporiser la famine");
-        }
+/*            if (nourriture < habitants) {
+                System.out.println("Votre royaume a péri d'une grande famine. Tips : essayez de manger vos camarades pour temporiser la famine");
+                defaite = true;
+            }*/
+
+        } while(!defaite || !victoire);
+
         sc.close();
     }
 }
