@@ -75,10 +75,10 @@ public class Main {
 
         int event = rnd.nextInt(100);
 
-        if (event > 5 && event <= 20) {
+        if (event > 1 && event <= 10) {
             System.out.println("Vous avez récupéré plus de caillasse ! +2 Pierres");
             ressourcesJoueur.setPierre(ressourcesJoueur.getPierre() + 2);
-        } else if (event <= 5) {
+        } else if (event <= 1) {
             System.out.println("Un éboulement de caillasse vous tombe sur la tête ! Vous perdez 1 Habitant.");
             System.out.println("Suite à cette évènement, votre mine n'est plus accessible pendant 2 tours.");
             ressourcesJoueur.setHabitants(ressourcesJoueur.getHabitants() - 1);
@@ -146,46 +146,42 @@ public class Main {
     }
 
     private static void showRessources(Ressources r) {
-        System.out.println("╔══════════════════════════════════════════════════════════╗");
-        System.out.println("║ Vos ressources :                                         ║");
-        System.out.println("║ Bois : " + r.getBois() + "                               ║");
-        System.out.println("║ Pierre : " + r.getPierre() + "                           ║");
-        System.out.println("║ Or : " + r.getOr() + "                                   ║");
-        System.out.println("║ Nourriture : " + r.getNourriture() + "                   ║");
-        System.out.println("║ Habitants : " + r.getHabitants() + "                     ║");
-        System.out.println("╚══════════════════════════════════════════════════════════╝");
+        System.out.println("=================================");
+        System.out.println("           RESSOURCES");
+        System.out.println("=================================");
+        System.out.printf("   🌲 Bois        : %d%n", r.getBois());
+        System.out.printf("   🪨 Pierre      : %d%n", r.getPierre());
+        System.out.printf("   💰 Or          : %d%n", r.getOr());
+        System.out.printf("   🍗 Nourriture  : %d%n", r.getNourriture());
+        System.out.printf("   👥 Habitants   : %d%n", r.getHabitants());
+        System.out.println("=================================");
     }
 
     public static void main(String[] args) {
         Ressources joueur1 = new Ressources();
         int habitants = joueur1.getHabitants();
         do {
-            System.out.println("╔══════════════════════════════════════════════════════════╗");
-            System.out.println("║                                                          ║");
-            System.out.println("║     ██╗ ███████╗███╗   ███╗██████╗ ██╗██████╗ ███████╗   ║");
-            System.out.println("║     ██║ ██╔════╝████╗ ████║██╔══██╗██║██╔══██╗██╔════╝   ║");
-            System.out.println("║     ██║ █████╗  ██╔████╔██║██████╔╝██║██████╔╝█████╗     ║");
-            System.out.println("║██   ██║ ██╔══╝  ██║╚██╔╝██║██╔═══╝ ██║██╔══██╗██╔══╝     ║");
-            System.out.println("║╚█████╔╝ ███████╗██║ ╚═╝ ██║██║     ██║██║  ██║███████╗   ║");
-            System.out.println("║ ╚════╝  ╚══════╝╚═╝     ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝   ║");
-            System.out.println("║                                                          ║");
-            System.out.println("║                  BIENVENUE DANS JEMPIRE                  ║");
-            System.out.println("╠══════════════════════════════════════════════════════════╣");
-            System.out.println("║ Que voulez-vous faire ?                                  ║");
-            System.out.println("║ 1 - Explorer la forêt                                    ║");
-            System.out.println("║ Gain : +5 Bois | +3 Nourriture                           ║");
-            System.out.println("║ 2 - Créer une mine ( -10 Bois)                           ║");
-            System.out.println("║ Gain : Débloque accès à la pierre                        ║");
-            System.out.println("║ 3 - Travailler à la mine (-5 Nourritures)                ║");
-            System.out.println("║ Gain :+5 Pierre | +2 Or                                  ║");
-            System.out.println("║ 4 - Recruter un soldat ( -30 Or)                         ║");
-            System.out.println("║ Gain : +1 Habitant                                       ║");
-            System.out.println("║ 5 - Commercer ( -5 Pierres)                              ║");
-            System.out.println("║ Gain : +10 Or                                            ║");
-            System.out.println("║ 6 - Construire un château ( -100 Bois, -100 Pierre,      ║");
-            System.out.println("║ -200 Or, -40 Habitants)                                  ║");
-            System.out.println("║  Gain: VICTOIRE IMMÉDIATE !                              ║");
-            System.out.println("╚══════════════════════════════════════════════════════════╝");
+            System.out.println("===========================================================");
+            System.out.println("                                                        ");
+            System.out.println("     ██╗ ███████╗███╗   ███╗██████╗ ██╗██████╗ ███████╗ ");
+            System.out.println("     ██║ ██╔════╝████╗ ████║██╔══██╗██║██╔══██╗██╔════╝ ");
+            System.out.println("     ██║ █████╗  ██╔████╔██║██████╔╝██║██████╔╝█████╗   ");
+            System.out.println("██   ██║ ██╔══╝  ██║╚██╔╝██║██╔═══╝ ██║██╔══██╗██╔══╝   ");
+            System.out.println("╚█████╔╝ ███████╗██║ ╚═╝ ██║██║     ██║██║  ██║███████╗ ");
+            System.out.println(" ╚════╝  ╚══════╝╚═╝     ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝ ");
+            System.out.println("                                                        ");
+            System.out.println("                  BIENVENUE DANS JEMPIRE                ");
+            System.out.println("===========================================================");
+            System.out.println(" Que voulez-vous faire ?                              ");
+            System.out.println(" Choix |         Action       |     Coût    |  Gain");
+            System.out.println("   1   | Explorer la forêt    |     Aucun   | +5 🌲 , +3 🍗");
+            System.out.println("   2   | Créer une mine       |     -10 🌲  | Accès à  🪨");
+            System.out.println("   3   | Travailler à la mine |     -5 🍗   | +5 🪨,  +2 💰");
+            System.out.println("   4   | Recruter un soldat   |    -30 💰   | +1 👥");
+            System.out.println("   5   | Commercer            |     -5 🪨   | +10 💰");
+            System.out.println("   6   | Construire un château| -100 🌲, -100 🪨, -200 💰, -40 👥 | VICTOIRE IMMÉDIATE");
+            System.out.println("===========================================================");
+
             showRessources(joueur1);
             switch (sc.nextByte()) {
                 case 1 -> explorerForet(joueur1);
