@@ -189,6 +189,7 @@ public class Main {
                     mineBloquee = false;
                 }
                 nombreTour++;
+                System.out.println("Tour : " + nombreTour);
                 if (raid.apparitionRaid(nombreTour)) {
                     raid.monstresRaid(nombreTour, joueur1);
                 }
