@@ -5,7 +5,7 @@ public class Ennemy_Raid {
         }
     }
 
-    private boolean apparitionRaid(int nombreTour) {
+    public boolean apparitionRaid(int nombreTour) {
         // pourcentage de chance d'apparition = a partir du tour 2 (base) 0.01 + (nbrtour/2)/50 //90 tours pour atteindre le max
         if (nombreTour > 1) {
             double base = 0.01;
@@ -21,7 +21,7 @@ public class Ennemy_Raid {
         return false;
     }
 
-    private void monstresRaid(int nombreTour, Ressources ressourcesJoueur) {
+    public void monstresRaid(int nombreTour, Ressources ressourcesJoueur) {
         double radcafards;
         double rataupes;
         double schtroumpfCannibal;
@@ -68,17 +68,17 @@ public class Ennemy_Raid {
     private void apparitionRadcafards(int nombreTour, Ressources ressourcesJoueur) {
         // 1 Radcafard tues 1 Habitant
         int habitants = ressourcesJoueur.getHabitants();
-        int nombreRadcafards = (int)(Math.random() * habitants - 1);
+        int nombreRadcafards = (int)(Math.random() * habitants / 2);
         int perte = 0;
 
         System.err.println("Une horde de radcafards est apparue, vite à vos stimpacks !");
-        for (int i = 0; i < habitants; i++) {
+        for (int i = 1; i < habitants; i++) {
             if(Math.random() < 0.8) {
                 System.err.println("Abri 042 : habitant " + i + " a succombé à ses blessures.");
-                ressourcesJoueur.setHabitants(habitants - nombreRadcafards);
                 perte++;
             }
         }
+        habitants -= perte;
         System.err.println("Vous avez perdu " + perte + " habitant.s");
         if (habitants - nombreRadcafards >= 25) {
             int bonus = 0;
@@ -87,31 +87,31 @@ public class Ennemy_Raid {
                     bonus++;
                 }
             }
-            ressourcesJoueur.setHabitants(ressourcesJoueur.getNourriture() + bonus);
+            ressourcesJoueur.setNourriture(ressourcesJoueur.getNourriture() + bonus);
             System.out.println("Vos habitants se sont bien battus, et vous ont gardé quelques morceaux de radcafards ! Miam ! (Nourriture + )" + bonus);
         }
+        ressourcesJoueur.setHabitants(habitants);
     }
 
     private void apparitionRataupes(int nombreTour, Ressources ressourcesJoueur) {
         // 1 Radcafard tues 2 Habitant
         int habitants = ressourcesJoueur.getHabitants();
-        int nombreRataupes = (int)(Math.random() * habitants - 1);
+        int nombreRataupes = (int)(Math.random() * habitants / 2);
         int perte = 0;
 
         System.err.println("Une horde de rataupes est apparue, vite à vos stimpacks !");
-        for (int i = 0; i < habitants - 1; i++) {
+        for (int i = 1; i < habitants; i++) {
             if(Math.random() < 0.8) {
                 System.err.println("Abri 042 : habitant " + i + " a succombé à ses blessures.");
-                ressourcesJoueur.setHabitants(habitants - nombreRataupes);
                 perte++;
             }
             i++;
             if(Math.random() < 0.8) {
                 System.err.println("Abri 042 : habitant " + i + " a succombé à ses blessures.");
-                ressourcesJoueur.setHabitants(habitants - nombreRataupes);
                 perte++;
             }
         }
+        habitants -= perte;
         System.err.println("Vous avez perdu " + perte + " habitant.s");
         if (habitants - nombreRataupes >= 25) {
             int bonus = 0;
@@ -123,5 +123,6 @@ public class Ennemy_Raid {
             ressourcesJoueur.setNourriture(ressourcesJoueur.getNourriture() + bonus);
             System.out.println("Vos habitants se sont bien battus, et vous ont gardé quelques morceaux de rataupes ! Miam ! (Nourriture + )" + bonus);
         }
+        ressourcesJoueur.setHabitants(habitants);
     }
 }
