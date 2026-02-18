@@ -3,17 +3,9 @@ import java.util.Scanner;
 public class Main {
     private static final Scanner sc = new Scanner(System.in);
     private static boolean accesMine = false;
-    private static boolean victoire = false;
     private static boolean defaite = false;
-
-    private static void nourirHabitants(Ressources ressourcesJoueur) {
-        int nourriture = ressourcesJoueur.getNourriture();
-        int habitants = ressourcesJoueur.getHabitants();
-        int nourir = ressourcesJoueur.setNourriture(nourriture - habitants);
-        nourriture = nourir;
-        System.out.println("Vous avez nourir vos habitants.");
-    }
-
+    private static boolean victoire = false;
+    private static boolean skipTour = false;
 
     private static void explorerForet(Ressources ressourcesJoueur) {
         int bois =  ressourcesJoueur.getBois();
@@ -27,8 +19,13 @@ public class Main {
 
     private static void creerMine(Ressources ressourcesJoueur) {
         int bois = ressourcesJoueur.getBois();
+        if (accesMine) {
+            System.out.println("Une mine c'est déjà assez suffisant, spam plus le clavier");
+            skipTour = true;
+        }
         if (bois < 10) {
             System.out.println("Vous n'avez pas assez de bois");
+            skipTour = true;
         }
         else {
             ressourcesJoueur.setBois(bois - 10);
@@ -38,14 +35,17 @@ public class Main {
     }
 
     private static void travaillerMine (Ressources ressourcesJoueur) {
-        int nourriture = ressourcesJoueur.getNourriture();
         if (!accesMine) {
             System.out.println("Impossible de miner sans mine, élémentaire.");
+            skipTour = true;
+            return;
         }
+        int nourriture = ressourcesJoueur.getNourriture();
         if (nourriture < 5) {
             System.out.println("Un nain se doit d'être en bonne condition pour pouvoir miner, mange plus camarade !");
+            skipTour = true;
         } else {
-            System.out.println("Après une dose considérable de bière, vos nains ont ramassé de la grosse caillasse !");
+            System.out.println("Après une dose considérable de bière, vos nains ont ramassé de la grosse caillasse y compris celle qui brille !");
             ressourcesJoueur.setNourriture(nourriture - 5);
             int pierre =  ressourcesJoueur.getPierre();
             ressourcesJoueur.setPierre(pierre + 5);
@@ -58,6 +58,7 @@ public class Main {
         int or =  ressourcesJoueur.getOr();
         if (or < 30) {
             System.out.println("Vos cailloux ne brillent pas assez");
+            skipTour = true;
         } else  {
             int habitants = ressourcesJoueur.getHabitants();
             ressourcesJoueur.setOr(or - 30);
@@ -70,6 +71,7 @@ public class Main {
         int pierre = ressourcesJoueur.getPierre();
         if (pierre < 5) {
             System.out.println("*Bruit d'un villageois qui refuse sur Minecraft*");
+            skipTour = true;
         } else {
             ressourcesJoueur.setPierre(pierre - 5);
             int or =   ressourcesJoueur.getOr();
@@ -86,6 +88,7 @@ public class Main {
 
         if (bois < 100 && pierre < 100 && or < 200 && habitants < 40 ) {
             System.out.println("T'as vraiment cru bâtir un château avec 3 pierres et un bâton ?!");
+            skipTour = true;
         }
         else {
             ressourcesJoueur.setBois(bois - 100);
@@ -97,13 +100,24 @@ public class Main {
         }
     }
 
+    private static void nourrirHabitants(Ressources ressourcesJoueur) {
+        int nourriture = ressourcesJoueur.getNourriture();
+        int habitants = ressourcesJoueur.getHabitants();
+        if (habitants <= 0) {
+            defaite = true;
+        }
+        if (nourriture < habitants) {
+            ressourcesJoueur.setNourriture(habitants - (habitants - nourriture));
+        } else {
+            System.out.println("Vous avez ressourcé vos troupes pour " + (habitants) + " point de nourriture.");
+            ressourcesJoueur.setNourriture(nourriture - habitants);
+        }
+    }
+
     private static void showRessources(Ressources r) {
         System.out.println("Vos ressources: ");
-        System.out.println("Bois : " + r.getBois());
-        System.out.println("Pierre : " + r.getPierre());
-        System.out.println("Or : " + r.getOr());
-        System.out.println("Nourriture : " + r.getNourriture());
-        System.out.println("Habitants : " + r.getHabitants());
+        System.out.println("| Bois | Pierre | Or | Nourriture | Habitants |");
+        System.out.println("| -- " + r.getBois() + " -- | --- " + r.getPierre() + "--- | ---" + r.getOr() + "--- | ---" + "--- | ---" + r.getNourriture() + "--- | ---" + r.getHabitants() + "--- |");
     }
 
     public static void main(String[] args) {
@@ -113,13 +127,15 @@ public class Main {
 
         do {
             showRessources(joueur1);
-            System.out.println("Que voulez-vous faire ?");
-            System.out.println("\t1 - Explorer la forêt | Coût : Aucun. | Gain : +5 Bois, +3 Nourriture.");
-            System.out.println("\t2 - Créer une mine | Coût : 10 Bois | Gain : Débloque l'accès à la pierre.");
-            System.out.println("\t3 - Travailler à la mine. | Coût : 5 Nourriture | Gain : +5 Pierre, +2 Or.");
-            System.out.println("\t4 - Recruter un soldat. | Coût : 30 Or | Gain : +1 Habitant.");
-            System.out.println("\t5 - Commercer. | Coût : 5 Pierre | Gain : +10 Or.");
-            System.out.println("\t6 - Construire un château. | Coût : 100 Bois, 100 Pierre, 200 Or, 40 Habitants. | Gain : VICTOIRE IMMÉDIATE !!!!");
+            System.out.println("|------- Que voulez-vous faire ? -------|");
+            System.out.println("| Choix | Action | Coût / Risque | Gain |");
+            System.out.println("| :--- | :--- | :--- | :--- |");
+            System.out.println("| 1 | Explorer la forêt | Aucun | +5 Bois, +3 Nourriture |");
+            System.out.println("| 2 | Créer une mine | -10 Bois | (Débloque l'accès à la pierre pour les tours suivants) |");
+            System.out.println("| 3 | Travailler à la mine | -5 Nourriture | +5 Pierre, +2 Or (Seulement si mine construite !) |");
+            System.out.println("| 4 | Recruter un soldat | -30 Or | +1 Habitant |");
+            System.out.println("| 5 | Commercer | -5 Pierre | +10 Or |");
+            System.out.println("| 6 | CONSTRUIRE LE CHÂTEAU | -100 Bois, -100 Pierre, -200 Or, -40 Habitants | VICTOIRE IMMÉDIATE ! |");
 
             switch (sc.nextByte()) {
                 case 1 -> explorerForet(joueur1);
@@ -130,14 +146,16 @@ public class Main {
                 case 6 -> construireChateau(joueur1);
                 default -> System.out.println("Impossible d'effectuer cette action");
             }
+            if (!skipTour) {
+                nourrirHabitants(joueur1);
+            }
+            showRessources(joueur1);
+        } while(!victoire || !defaite);
 
-/*            if (nourriture < habitants) {
-                System.out.println("Votre royaume a péri d'une grande famine. Tips : essayez de manger vos camarades pour temporiser la famine");
-                defaite = true;
-            }*/
 
-        } while(!defaite || !victoire);
-
+        if (habitants <= 0) {
+            System.out.println("Votre royaume a péri d'une grande famine. Tips : essayez de manger vos camarades pour temporiser la famine");
+        }
         sc.close();
     }
 }
