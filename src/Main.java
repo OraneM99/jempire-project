@@ -2,6 +2,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
+    private static final Ennemy_Raid raid = new Ennemy_Raid();
     private static final Scanner sc = new Scanner(System.in);
     private static final Random rnd = new  Random();
     private static boolean accesMine = false;
@@ -136,9 +137,18 @@ public class Main {
     private static void nourrirHabitants(Ressources ressourcesJoueur) {
         int nourriture = ressourcesJoueur.getNourriture();
         int habitants = ressourcesJoueur.getHabitants();
-
-        if (nourriture < habitants) {
-            ressourcesJoueur.setNourriture(habitants - (habitants - nourriture));
+        if (habitants <= 0) {
+            System.out.println("Votre royaume a péri d'une grande famine. Tips : essayez de manger vos camarades pour temporiser la famine");
+            defaite = true;
+        }
+        if (nourriture <= habitants) {
+            int deficit = nourriture - habitants;
+            if (deficit < 0) {
+                ressourcesJoueur.setHabitants(habitants - Math.abs(deficit));
+                ressourcesJoueur.setNourriture(0);
+            } else {
+                ressourcesJoueur.setNourriture(deficit);
+            }
         } else {
             System.out.println("Vous avez ressourcé vos troupes pour " + (habitants) + " point de nourriture.");
             ressourcesJoueur.setNourriture(nourriture - habitants);
@@ -173,24 +183,23 @@ public class Main {
                 default -> System.out.println("Impossible d'effectuer cette action");
             }
             if (!skipTour) {
+                if (tourRestantBloque > 0) {
+                    tourRestantBloque--;
+                } else if (tourRestantBloque == 0) {
+                    mineBloquee = false;
+                }
+                nombreTour++;
+                if (raid.apparitionRaid(nombreTour)) {
+                    raid.monstresRaid(nombreTour, joueur1);
+                }
+                nourrirHabitants(joueur1);
+                showRessources(joueur1);
                 if (habitants <= 0) {
                     defaite = true;
                 }
-                else {
-                    nourrirHabitants(joueur1);
-                    if (tourRestantBloque > 0) {
-                        tourRestantBloque--;
-                    } else if (tourRestantBloque == 0) {
-                            mineBloquee = false;
-                    }
-                }
-                nombreTour++;
             }
             skipTour = false;
-        } while(!victoire || !defaite);
-        if (habitants <= 0) {
-            System.out.println("Votre royaume a péri d'une grande famine. Tips : essayez de manger vos camarades pour temporiser la famine");
-        }
+        } while(!victoire && !defaite);
         sc.close();
     }
 }
