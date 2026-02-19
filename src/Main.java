@@ -10,7 +10,7 @@ public class Main {
     private static boolean victoire = false;
     private static boolean skipTour = false;
     private static boolean mineBloquee = false;
-    private static int nombreTour = 1;
+    private static boolean distillerieConstruite = false;
     private static int tourRestantBloque = 0;
 
     private static void explorerForet(Ressources ressourcesJoueur) {
@@ -21,10 +21,10 @@ public class Main {
 
         System.out.println("Vous avez gagné 5 de bois et 3 de nourriture");
 
-        int diceroll = rnd.nextInt(100) + 1;
+        int event = rnd.nextInt(100);
 
-        if (diceroll <= 20) {
-            System.out.println("Vous avez rencontré un allié ! Vous gagnez + 1 habitant.");
+        if (event <= 5) {
+            System.out.println("Vous avez rencontré un vagabond ! +1 Habitant");
             ressourcesJoueur.setHabitants(ressourcesJoueur.getHabitants() + 1);
         }
     }
@@ -103,6 +103,7 @@ public class Main {
 
     private static void commercer(Ressources ressourcesJoueur) {
         int pierre = ressourcesJoueur.getPierre();
+
         if (pierre < 5) {
             System.out.println("*Bruit d'un villageois qui refuse sur Minecraft*");
             skipTour = true;
@@ -111,6 +112,19 @@ public class Main {
             int or =   ressourcesJoueur.getOr();
             ressourcesJoueur.setOr(or + 10);
             System.out.println("Félicitation ! Vous venez d'arnaquer un marchand honnête ! Non mais sérieusement, 10 d'or les 5 pierres ?...");
+        }
+
+        if (distillerieConstruite) {
+
+            int event = rnd.nextInt(100);
+
+            if (event <= 5 && event > 1) {
+                System.out.println("Vos nains étaient trop bourrés pour vendre quelque chose, vous avez tout perdu et rien gagné.");
+                ressourcesJoueur.setPierre(ressourcesJoueur.getOr() - 10);
+            } else if (event <= 1) {
+                System.out.println("Vos nains étaient vachement efficace, vous avez vendu 5 pierres pour 20 pièces d'or ! (Je pense que le marchand devait être bourré  ...)");
+                ressourcesJoueur.setOr(ressourcesJoueur.getOr() + 10);
+            }
         }
     }
 
@@ -134,6 +148,25 @@ public class Main {
         }
     }
 
+    public static void construireDistillerie(Ressources ressourcesJoueur) {
+        int bois = ressourcesJoueur.getBois();
+        int pierre = ressourcesJoueur.getPierre();
+        int or =  ressourcesJoueur.getOr();
+
+        if (bois < 30 && pierre < 10 && or < 10) {
+            System.out.println("Une bonne binouze ça se mérite.");
+            skipTour = true;
+        } else if (!accesMine) {
+            System.out.println("Tu crois pouvoir construire une distillerie sans pierre ?");
+        } else {
+            ressourcesJoueur.setBois(bois - 30);
+            ressourcesJoueur.setPierre(pierre - 10);
+            ressourcesJoueur.setOr(or - 10);
+            System.out.println("C'est l'heure de boire !");
+            distillerieConstruite = true;
+        }
+    }
+
     private static void nourrirHabitants(Ressources ressourcesJoueur) {
         int nourriture = ressourcesJoueur.getNourriture();
         int habitants = ressourcesJoueur.getHabitants();
@@ -150,19 +183,20 @@ public class Main {
                 ressourcesJoueur.setNourriture(deficit);
             }
         } else {
-            System.out.println("Vous avez ressourcé vos troupes pour " + (habitants) + " point de nourriture.");
             ressourcesJoueur.setNourriture(nourriture - habitants);
+            System.out.println("Vous avez ressourcé vos troupes pour " + (habitants) + " point de nourriture.");
         }
     }
 
     private static void showRessources(Ressources r) {
         System.out.println();
-        System.out.println("Ressources : Bois : " + r.getBois() + " | Pierre :" + r.getPierre() + " | Or : " + r.getOr() + " | Nourriture : " + r.getNourriture() + " | Habitants : " + r.getHabitants());
+        System.out.println("Ressources : Bois : " + r.getBois() + " | Pierre : " + r.getPierre() + " | Or : " + r.getOr() + " | Nourriture : " + r.getNourriture() + " | Habitants : " + r.getHabitants());
     }
 
     public static void main(String[] args) {
         Ressources joueur1 = new Ressources();
-        int habitants = joueur1.getHabitants();
+        int nombreTour = 1;
+
         do {
             showRessources(joueur1);
             System.out.println();
@@ -171,17 +205,22 @@ public class Main {
             System.out.println("\t3 - Travailler mine     (-5 Nourriture, +5 Pierre, +2 Or)");
             System.out.println("\t4 - Recruter soldat     (-30 Or, +1 Habitant)");
             System.out.println("\t5 - Commercer           (-5 Pierre, +10 Or)");
-            System.out.println("\t6 - Construire château  (VICTOIRE)");
+            System.out.println("\t6 - Créer une distillerie (-30 Bois, -10 Pierre, -10 Or)");
+            System.out.println("\t7 - Construire château  (VICTOIRE)");
 
-            switch (sc.nextByte()) {
+            byte action = sc.nextByte();
+
+            switch (action) {
                 case 1 -> explorerForet(joueur1);
                 case 2 -> creerMine(joueur1);
                 case 3 -> travaillerMine(joueur1);
                 case 4 -> recruterSoldat(joueur1);
                 case 5 -> commercer(joueur1);
-                case 6 -> construireChateau(joueur1);
-                default -> System.out.println("Impossible d'effectuer cette action");
+                case 6 -> construireDistillerie(joueur1);
+                case 7 -> construireChateau(joueur1);
+                default -> System.out.println("Impossible d'effectuer cette action.");
             }
+
             if (!skipTour) {
                 if (tourRestantBloque > 0) {
                     tourRestantBloque--;
@@ -199,6 +238,7 @@ public class Main {
                     defaite = true;
                 }
             }
+
             skipTour = false;
         } while(!victoire && !defaite);
         sc.close();

@@ -1,31 +1,31 @@
-# Contexte du projet
+# JEMPIRE PROJECT
 
-Jeu de gestion médiéval avec uniquement le moteur logique du jeu ("Core Gameplay").
+Bienvenue dans JEMPIRE, un jeu de gestion en console où vous devez développer votre royaume, gérer vos ressources et construire votre château pour gagner !
 
-Les règles sont les suivantes :
+---
 
-1. Le but du jeu
-Le joueur commence avec un seul habitant. Il doit gérer ses ressources tour par tour pour construire un CHÂTEAU. S'il n'a plus d'habitants, c'est PERDU.
+## Objectif du jeu
 
-2. Les Ressources à gérer (Variables)
+Le joueur commence avec un seul habitant. Il doit gérer ses ressources tour par tour pour construire un CHÂTEAU. S'il n'a plus d'habitants, c'est PERDU. 
+
+## Les Ressources à gérer
 Le jeu doit suivre ces compteurs en permanence (valeurs de départ entre parenthèses) :
 
-Bois (0)
-Pierre (0)
-Or (50)
-Nourriture (100) - Attention, ça baisse vite !
-Habitants (1)
+- Bois (0)
+- Pierre (0)
+- Or (50)
+-Nourriture (100) - Attention, ça baisse vite !
+- Habitants (1)
 
-3. Déroulement d'un tour (La boucle)
-Tant que le jeu n'est pas fini, le programme doit :
+## Déroulement d'un tour
+À chaque tour, un menu et vos resssources s’affichent dans la console.
+Vous devez entrer un numéro correspondant à l’action souhaitée.
 
-Afficher les ressources actuelles.
-Demander au joueur ce qu'il veut faire (via un numéro).
-Calculer le résultat de l'action.
-Faire manger les habitants (Chaque habitant mange 1 unité de nourriture).
+Chaque tour vos habitants mangent de la nourriture donc 1 unité de nourriture par habitant.
+
 -> Si pas assez de nourriture : les habitants meurent de faim (Habitants = 0 => Game Over).
 
-4. Les Actions possibles (Le Menu)
+## Les Actions possibles
 Voici les choix que le joueur doit avoir :
 
 | Choix | Action | Coût / Risque | Gain |
@@ -44,7 +44,14 @@ Voici les choix que le joueur doit avoir :
 
 | 6 | CONSTRUIRE LE CHÂTEAU | -100 Bois, -100 Pierre, -200 Or, -40 Habitants | VICTOIRE IMMÉDIATE ! |
 
+## Stratégie conseillée
 
-Cordialement,
+Commencez par explorer la forêt pour accumuler du bois et de la nourriture.
 
-Michel L.E.
+Créez une mine rapidement.
+
+Travaillez à la mine pour générer pierre et or.
+
+Recrutez des soldats progressivement.
+
+Accumulez toutes les ressources nécessaires pour construire le château.
