@@ -4,6 +4,22 @@ Bienvenue dans JEMPIRE, un jeu de gestion en console où vous devez développer 
 
 ---
 
+## Installation & Lancement
+
+Avant toutes choses pour lancer le projet il faut effectuer cette commande de build :
+```
+javac -d build src/main.java 
+```
+Ou encore cette commande pour lancer en build les autres classes
+```
+javac -d build src/*
+```
+
+Et pour le lancement du projet :
+```
+java -cp build/Main
+```
+
 ## Objectif du jeu
 
 Le joueur commence avec un seul habitant. Il doit gérer ses ressources tour par tour pour construire un CHÂTEAU. S'il n'a plus d'habitants, c'est PERDU. 
