@@ -2,6 +2,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
+    private static final Ennemy_Raid raid = new Ennemy_Raid();
     private static final Scanner sc = new Scanner(System.in);
     private static final Random rnd = new  Random();
     private static boolean accesMine = false;
@@ -169,17 +170,18 @@ public class Main {
     private static void nourrirHabitants(Ressources ressourcesJoueur) {
         int nourriture = ressourcesJoueur.getNourriture();
         int habitants = ressourcesJoueur.getHabitants();
-
-        if (nourriture < habitants) {
-            int deficit = habitants - nourriture;
-            ressourcesJoueur.setNourriture(habitants - deficit);
-
-            if (nourriture <= 0) {
-                defaite = true;
-                System.out.println("Votre royaume a péri d'une grande famine. Tips : essayez de manger vos camarades pour temporiser la famine.");
-                sc.close();
+        if (habitants <= 0) {
+            System.out.println("Votre royaume a péri d'une grande famine. Tips : essayez de manger vos camarades pour temporiser la famine");
+            defaite = true;
+        }
+        if (nourriture <= habitants) {
+            int deficit = nourriture - habitants;
+            if (deficit < 0) {
+                ressourcesJoueur.setHabitants(habitants - Math.abs(deficit));
+                ressourcesJoueur.setNourriture(0);
+            } else {
+                ressourcesJoueur.setNourriture(deficit);
             }
-
         } else {
             ressourcesJoueur.setNourriture(nourriture - habitants);
             System.out.println("Vous avez ressourcé vos troupes pour " + (habitants) + " point de nourriture.");
@@ -220,30 +222,25 @@ public class Main {
             }
 
             if (!skipTour) {
-                nourrirHabitants(joueur1);
-
-                if (joueur1.getHabitants() <= 0) {
-                    defaite = true;
-                }
-
                 if (tourRestantBloque > 0) {
                     tourRestantBloque--;
                 } else if (tourRestantBloque == 0) {
                     mineBloquee = false;
                 }
-
                 nombreTour++;
                 System.out.println("Tour : " + nombreTour);
+                if (raid.apparitionRaid(nombreTour)) {
+                    raid.monstresRaid(nombreTour, joueur1);
+                }
+                nourrirHabitants(joueur1);
+                showRessources(joueur1);
+                if (habitants <= 0) {
+                    defaite = true;
+                }
             }
 
             skipTour = false;
-
-        } while (!victoire && !defaite);
-
-       if (victoire) {
-            System.out.println("Félicitations ! Vous avez construit le château et débuté un grand empire !");
-        }
-
+        } while(!victoire && !defaite);
         sc.close();
     }
 }
